@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+    <title>Title</title>
+</head>
+<body>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    *:before, *:after {
+        box-sizing: border-box;
+    }
+
+    body {
+        color: #7e7e7e;
+        font: 400 1em/1.5em "Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        margin: 0;
+    }
+
+    .map {
+        margin: 5em auto;
+        position: relative;
+    }
+
+    .map-markers {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .map-marker {
+        position: absolute;
+    }
+
+    .map-marker:after {
+        animation-duration: 10s;
+        animation-iteration-count: infinite;
+        animation-name: pop;
+        border-radius: 50%;
+        border: 1px solid #ce606f;
+        content: '';
+        height: 3em;
+        left: 0.5rem;
+        margin: -.5em 0 0 -.5em;
+        opacity: 0;
+        position: absolute;
+        top: 0.5rem;
+        width: 3em;
+    }
+
+    /*.map-marker:hover .map-marker-info {*/
+    /*display: block;*/
+    /*}*/
+    .map-marker:not(a):hover .map-marker-info {
+        display: block;
+    }
+
+    .map:after {
+        animation-delay: 3s;
+    }
+
+    .map-marker-info {
+        display: none;
+        left: 1.5rem;
+        position: absolute;
+        bottom: 0;
+        transform: translate(-50%, -1em);
+        /*width: 20em;*/
+        z-index: 999;
+    }
+
+    .map-marker-info header {
+        background-color: #ce606f;
+        border-radius: .5em .5em 0 0;
+        color: #fff;
+        padding: .5em 1em;
+    }
+
+    .map-marker-info main {
+        background-color: #fff;
+        border-radius: 0 0 .5em .5em;
+        color: #7e7e7e;
+        padding: .5em 1em;
+    }
+
+    .map-marker-info h2 {
+        margin-bottom: 0;
+    }
+
+    .map-marker-info-inner {
+        border-radius: .5em;
+        box-shadow: 0 0 .25em rgba(0, 0, 0, .3);
+        font-size: .875em;
+    }
+
+    .map-marker-info:after {
+        border-left: .75em solid transparent;
+        border-right: .75em solid transparent;
+        border-top: 1em solid #40b1cc45;
+        content: '';
+        height: 0;
+        left: 50%;
+        position: absolute;
+        top: 100%;
+        transform: translateX(-50%) translateY(-15%);
+        width: 0;
+    }
+
+    .animate {
+        animation-duration: 1s;
+        animation-fill-mode: both;
+    }
+
+    @keyframes bounce-in {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(.215, .610, .355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: translate(-50%, -1em) scale3d(.3, .3, .3);
+            z-index: 999;
+        }
+        20% {
+            opacity: 0.2;
+            transform: translate(-50%, -1em) scale3d(1.1, 1.1, 1.1);
+            z-index: 999;
+        }
+        40% {
+            opacity: 0.4;
+            transform: translate(-50%, -1em) scale3d(.9, .9, .9);
+            z-index: 999;
+        }
+        60% {
+            opacity: 0.6;
+            transform: translate(-50%, -1em) scale3d(1.03, 1.03, 1.03);
+            z-index: 999;
+        }
+        80% {
+            opacity: 0.8;
+            transform: translate(-50%, -1em) scale3d(.97, .97, .97);
+            z-index: 999;
+        }
+        100% {
+            opacity: 1;
+            transform: translate(-50%, -1em) scale3d(1, 1, 1);
+            z-index: 999;
+        }
+    }
+
+    .animate-bounce-in {
+        animation-duration: .75s;
+        animation-name: bounce-in;
+    }
+
+    /*.animate-pop {*/
+        /*animation-duration: 1s;*/
+        /*animation-name: pop;*/
+    /*}*/
+
+    /*@keyframes pop {*/
+        /*0% {*/
+            /*transform: scale(0);*/
+        /*}*/
+        /*8% {*/
+            /*opacity: .4;*/
+        /*}*/
+        /*10% {*/
+            /*opacity: 0;*/
+            /*transform: scale(1);*/
+        /*}*/
+    /*}*/
+
+    .world-map {
+        text-align: center;
+        position: relative;
+    }
+
+    .world-map img {
+        width: 80%;
+    }
+    .online after{
+        content: "";
+        position: absolute;
+        top: 0;
+        left:0;
+    }
+
+    .online svg{
+        position: absolute;
+        left: 0px;
+        width: 3rem;
+        top: 0px;
+        height: 3.5rem;
+        opacity: 0.63;
+    }
+
+    .online svg path {
+        fill: rgba(99, 188, 220, 1)
+    }
+
+    .offline svg {
+        left: 0px;
+        width: 2rem;
+        position: absolute;
+        transform: rotate(180deg);
+        top: 0px;
+        height: 2.5rem;
+    }
+
+    .offline svg path {
+        fill: rgba(91, 92, 112, 1)
+    }
+
+    .online img {
+        position: absolute;
+        left: 0.5rem;
+        top: 0.25rem;
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .offline img{
+        position: absolute;
+        left: 0.25rem;
+        top: 0.75rem;
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+
+    .tip-online {
+        position: absolute;
+        left: 10rem;
+        bottom: 7rem;
+        width: 2rem;
+        height: 2.5rem;
+        opacity: 0.63;
+    }
+
+    .text-online {
+        position: absolute;
+        left: 13rem;
+        bottom: 7rem;
+        color: #3DBDD9;
+        margin: 0;
+    }
+
+    .tip-offline {
+        position: absolute;
+        left: 10rem;
+        bottom: 3rem;
+        width: 2rem;
+        height: 2.5rem;
+        transform: rotate(180deg);
+    }
+
+    .text-offline {
+        position: absolute;
+        left: 13rem;
+        bottom: 3rem;
+        color: #5B5C70;
+        margin: 0;
+    }
+
+    .online a{
+        position: absolute;
+        top: 2rem;
+        left: 2rem;
+        color: #81c6dd;
+    }
+
+    .offline a{
+        position: absolute;
+        top: 1rem;
+        left: 1.5rem;
+        color: #6c5c6f;
+        text-decoration:none;
+    }
+
+    .rotate180 .logo{
+        width: 3em;
+        height: 3.5em;
+        transform: rotate(180deg);
+    }
+
+    .rotate180 .map-marker-info{
+        bottom: 3.5em;
+    }
+
+    a.top{
+        top: 0;
+    }
+</style>
+<script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+<div class="map" id="app">
+    <div class="world-map">
+        <img src="https://static.wixstatic.com/media/17330d_4ab20fac8b4244b692931936259f5fbc~mv2.png">
+        <ul class="map-markers" id="cities">
+            <template v-for="item in cities">
+                <li :style="{top:item.top+'%',left:item.left+'%'}" class="map-marker" :class="{rotate180:item.rotate180}">
+                    <div :class="item.line">
+                        <div class="logo">
+                            <svg viewBox="32.5 10 135.00010681152344 180" >
+                                <path d="M100 10c-37.3 0-67.5 30.3-67.5 67.6S100.1 190 100.1 190s67.5-75.3 67.4-112.6c0-37.2-30.2-67.4-67.5-67.4zm.1 95.6c-18.6 0-33.8-15-33.8-33.7s15-33.8 33.7-33.8 33.8 15 33.8 33.7-15 33.8-33.7 33.8z"></path>
+                            </svg>
+                            <img :src="item.logo">
+                        </div>
+                        <a :href="item.link"
+                           :style="{width:item.name.length+1+'em'}"
+                           :class="item.locate"
+                           v-if="item.line === 'online'"
+                           target="_blank">
+                            <span style="font-size:14px;font-weight: bold">{{item.name}}</span>
+                        </a>
+                        <a :style="{width:item.name.length+1+'em'}"
+                           :class="item.locate"
+                           v-else
+                           disabled>
+                            <span style="font-size:14px;font-weight: bold">{{item.name}}</span>
+                        </a>
+                    </div>
+                    <div class="map-marker-info animate-bounce-in" v-if="item.img">
+                        <img :src="item.img" style="width: 20em">
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </div>
+    <svg viewBox="32.5 10 135.00010681152344 180" class="tip-online">
+        <path d="M100 10c-37.3 0-67.5 30.3-67.5 67.6S100.1 190 100.1 190s67.5-75.3 67.4-112.6c0-37.2-30.2-67.4-67.5-67.4zm.1 95.6c-18.6 0-33.8-15-33.8-33.7s15-33.8 33.7-33.8 33.8 15 33.8 33.7-15 33.8-33.7 33.8z"
+              fill="rgba(99, 188, 220, 1)"></path>
+    </svg>
+    <p class="text-online">
+        <span>已上线城市</span>
+    </p>
+    <svg viewBox="32.5 10 135.00010681152344 180" class="tip-offline">
+        <path d="M100 10c-37.3 0-67.5 30.3-67.5 67.6S100.1 190 100.1 190s67.5-75.3 67.4-112.6c0-37.2-30.2-67.4-67.5-67.4zm.1 95.6c-18.6 0-33.8-15-33.8-33.7s15-33.8 33.7-33.8 33.8 15 33.8 33.7-15 33.8-33.7 33.8z"
+              fill="rgba(91, 92, 112, 1)"></path>
+    </svg>
+    <p class="text-offline">
+        <span>待上线城市</span>
+    </p>
+</div>
+</body>
+<script src="data.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            data:cities
+        },
+    })
+</script>
+</html>

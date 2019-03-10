@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/iview/dist/iview.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <!--<link rel="stylesheet" type="text/css" href="../../src/iview.css">-->
+    <!--<script type="text/javascript" src="../../src/vue.min.js"></script>-->
+    <!--<script type="text/javascript" src="../../src/iview.min.js"></script>-->
+    <!--<script src="../../src/jquery.min.js"></script>-->
+</head>
+<body>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    *:before, *:after {
+        box-sizing: border-box;
+    }
+
+    ::-webkit-scrollbar { /*隐藏滚轮*/
+        display: none;
+    }
+
+    body {
+        color: #50514f;
+        background-color: #63bcdc;
+        font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", Arial, sans-serif;
+        margin: 0;
+    }
+
+    .map {
+        position: relative;
+        margin: 0 auto;
+    }
+
+    .map-markers {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .map-marker {
+        position: absolute;
+    }
+
+    .map-marker:hover .map-marker-info {
+        display: block;
+    }
+
+    .map:after {
+        animation-delay: 3s;
+    }
+
+    .map-marker-info {
+        /*display: none;*/
+        left: 0.5rem;
+        position: absolute;
+        bottom: 0.75em;
+        transform: translate(-50%, -2em);
+        width: 20em;
+        z-index: 999;
+        /*background-color: #61d0d4d6;*/
+        text-align: center;
+    }
+
+    .map-marker-info-inner {
+        border-radius: .5em;
+        /*box-shadow: 0 0 .25em rgba(0, 0, 0, .3);*/
+        font-size: 1em;
+    }
+
+    .map-marker-info:after {
+        border-left: .75em solid transparent;
+        border-right: .75em solid transparent;
+        border-top: 1em solid #61d0d4d6;
+        content: '';
+        height: 0;
+        left: 50%;
+        position: absolute;
+        top: 100%;
+        transform: translateX(-50%);
+        width: 0;
+    }
+
+    .animate-bounce-in {
+        animation-duration: .75s;
+        animation-name: bounce-in;
+        animation-iteration-count:1;
+        -webkit-animation-iteration-count:1;
+    }
+
+    @keyframes bounce-in-2018 {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(.215, .610, .355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        100% {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+    @keyframes bounce-in-2017 {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(.215, .610, .355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        100% {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+    @keyframes bounce-in-2016 {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(.215, .610, .355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        100% {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+    @keyframes bounce-in-2015 {
+        0%, 20%, 40%, 60%, 80%, 100% {
+            transition-timing-function: cubic-bezier(.215, .610, .355, 1);
+        }
+        0% {
+            opacity: 0;
+            transform: scale3d(.3, .3, .3);
+        }
+        20% {
+            transform: scale3d(1.1, 1.1, 1.1);
+        }
+        40% {
+            transform: scale3d(.9, .9, .9);
+        }
+        60% {
+            opacity: 1;
+            transform: scale3d(1.03, 1.03, 1.03);
+        }
+        80% {
+            transform: scale3d(.97, .97, .97);
+        }
+        100% {
+            opacity: 1;
+            transform: scale3d(1, 1, 1);
+        }
+    }
+
+    .world-map {
+        width: 100%;
+        text-align: center;
+        display: block;
+        position: relative;
+    }
+
+    .world-map img {
+        width: 100%;
+    }
+
+    .point {
+        cursor: pointer;
+        position: absolute;
+        width: 1rem;
+        height: 1rem;
+        background-color: #a7a7a7;
+        /*background-color: red;*/
+        border-radius: 50%;
+        transition: all .3s ease;
+        will-change: transform, box-shadow;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 0 0 #a7a7a7;
+        /*opacity: 0.4;*/
+    }
+
+    .animation {
+        animation-duration: 3s;
+        animation-name: pulse;
+        animation-iteration-count:1;
+        -webkit-animation-iteration-count:1; /*Safari and Chrome*/
+    }
+
+    .point:hover {
+        animation: none;
+        transform: translate(-50%, -50%) scale3D(1.15, 1.15, 1);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+        z-index: 999;
+    }
+
+    @keyframes pulse-2018 {
+        0% {
+            box-shadow: 0 0 0 0 rgba(0, 110, 144, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(0, 110, 144, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(0, 110, 144, 0.1);
+        }
+    }
+    @keyframes pulse-2017 {
+        0% {
+            box-shadow: 0 0 0 0 rgba(148, 227, 41, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(148, 227, 41, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(148, 227, 41, 0.1);
+        }
+    }
+    @keyframes pulse-2016 {
+        0% {
+            box-shadow: 0 0 0 0 rgba(255, 224, 102, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(255, 224, 102, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(255, 224, 102, 0.1);
+        }
+    }
+    @keyframes pulse-2015 {
+        0% {
+            box-shadow: 0 0 0 0 rgba(242, 95, 92, 0.5);
+        }
+        50% {
+            box-shadow: 0 0 0 16px rgba(242, 95, 92, 0.3);
+        }
+        100% {
+            box-shadow: 0 0 0 0 rgba(242, 95, 92, 0.1);
+        }
+    }
+
+    .ivu-btn:hover {
+        border-color: white;
+        color: #50514f;
+    }
+
+    .ivu-btn {
+        font-size: 16px;
+        font-weight: bolder;
+        color: white;
+        background-color: #63bcdc;
+        padding-bottom: 0;
+        padding-top: 0;
+        border: 2px solid white;
+    }
+
+    button.ivu-btn .year {
+        height: 2em;
+        line-height: 2em;
+        /*border-left: 2px solid white;*/
+        /*border-right: 2px solid white;*/
+        padding: 0 5px;
+    }
+
+    .is_active {
+        background-color: white;
+        color: #50514f;
+    }
+
+    .dot {
+        width: 0.75em;
+        height: 0.75em;
+        border: 0;
+        display: inline;
+        border-radius: 100%;
+    }
+
+    .location {
+        margin: 1.5em 0;
+        padding: 0.25em 0.5em;
+        font-weight: bolder;
+        font-size: 12px;
+        /*transform: translateX(-50%);*/
+        border: 2px solid rgba(127, 127, 127, 1);
+        background-color: white;
+        position: absolute;
+    }
+
+    .dot_2015 {
+        background-color: #f25f5c;
+    }
+
+    .dot_2016 {
+        background-color: #ffe066;
+    }
+
+    .dot_2017 {
+        background-color: #94e329;
+    }
+
+    .dot_2018 {
+        background-color: #006e90;
+    }
+
+    .dot_all {
+        background-color: gray;
+    }
+
+    .point_2015 {
+        background-color: #f25f5c;
+    }
+
+    .point_2016 {
+        background-color: #ffe066;
+    }
+
+    .point_2017 {
+        background-color: #94e329;
+    }
+
+    .point_2018 {
+        background-color: #006e90;
+    }
+
+    .point_all {
+        background-color: gray;
+    }
+
+    /*
+    图片下 三角形颜色
+    */
+    .point_2015 .map-marker-info:not(.transform):after {
+        border-top: 1em solid #f25f5c;
+    }
+
+    .point_2016 .map-marker-info:not(.transform):after {
+        border-top: 1em solid #ffe066;
+    }
+
+    .point_2017 .map-marker-info:not(.transform):after {
+        border-top: 1em solid #94e329;
+    }
+
+    .point_2018 .map-marker-info:not(.transform):after {
+        border-top: 1em solid #006e90;
+    }
+
+    .point_all .map-marker-info:not(.transform):after {
+        border-top: 1em solid gray;
+    }
+
+    /*
+    图片边框
+     */
+    .point_2015 img {
+        width: 5em;
+        border: 2px solid #f25f5c;
+        border-radius: 100%;
+    }
+
+    .point_2016 img {
+        width: 5em;
+        border: 2px solid #ffe066;
+        border-radius: 100%;
+    }
+
+    .point_2017 img {
+        width: 5em;
+        border: 2px solid #94e329;
+        border-radius: 100%;
+    }
+
+    .point_2018 img {
+        width: 5em;
+        border: 2px solid #006e90;
+        border-radius: 100%;
+    }
+
+    .point_all img {
+        width: 5em;
+        border: 2px solid gray;
+        border-radius: 100%;
+    }
+
+    .马来西亚-吉隆坡 .transform {
+        left: -3.5em;
+        bottom: -9em;
+    }
+
+    .马来西亚-吉隆坡 .transform:after {
+        content: none;
+    }
+
+    .马来西亚-吉隆坡 .transform:before {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(30px, 10px) rotate(45deg);
+    }
+
+    .马来西亚-吉隆坡 .point_2017 p {
+        left: -3.5em;
+        bottom: -11em;
+        transform: translateX(-50%);
+    }
+
+    .中国-香港 .transform {
+        transform: rotate(180deg);
+    }
+
+    .中国-香港 .point_2017 .map-marker-info {
+        left: 0.5em;
+        bottom: -7.5em;
+    }
+
+    .中国-香港 .point_2017 .map-marker-info img {
+        transform: rotate(180deg);
+    }
+
+    .中国-香港 .point_2017 .map-marker-info:after {
+        border-top: 1em solid #94e329;
+    }
+
+    .中国-香港 .point_2017 p {
+        position: absolute;
+        left: 2em;
+        top: -2em;
+        transform: translateX(0%);
+    }
+
+    .中国-深圳 .point_2015 .map-marker-info:after {
+        border-top: 1em solid #f25f5c;
+    }
+
+    .中国-深圳 .point_2015 p {
+        transform: translateX(-3em);
+    }
+
+    .中国-深圳 .point_2017 p {
+        right: 2em;
+        top: -2em;
+        transform: translateX(0%);
+    }
+
+    .中国-深圳 .point_2017 .map-marker-info:after {
+        border-top: 1em solid #94e329;
+    }
+
+    .中国-深圳 .point_2018 .map-marker-info:after {
+        border-top: 1em solid #006e90;
+    }
+
+    .中国-深圳 .point_2018 p {
+        left: -3em;
+        bottom: 12.5em;
+    }
+
+    .柬埔寨-金边 .transform {
+        left: -3.5em;
+        bottom: -9em;
+    }
+
+    .柬埔寨-金边 .transform:after {
+        content: none;
+    }
+
+    .柬埔寨-金边 .transform:before {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(30px, 10px) rotate(45deg);
+    }
+
+    .柬埔寨-金边 .point_2018 p {
+        left: -3.5em;
+        bottom: -11em;
+        transform: translateX(-50%);
+    }
+
+    .瑞士-格朗 .transform {
+        transform: rotate(180deg);
+    }
+
+    .瑞士-格朗 .point_2018 .map-marker-info {
+        left: -2em;
+        bottom: -7em;
+    }
+
+    .瑞士-格朗 .point_2018 .map-marker-info img {
+        transform: rotate(180deg);
+    }
+
+    .瑞士-格朗 .point_2018 .map-marker-info:after {
+        border-top: 1em solid #006e90;
+    }
+
+    .瑞士-格朗 .point_2018 p {
+        position: absolute;
+        left: -3em;
+        bottom: -11em;
+        transform: translateX(0%);
+    }
+
+    .瑞典-斯德哥尔摩 .transform {
+        left: 4.5em;
+        bottom: 1.5em;
+    }
+
+    .瑞典-斯德哥尔摩 .transform:after {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(-25px, -10px) rotate(45deg);
+    }
+
+    .瑞典-斯德哥尔摩 .point_2018 p {
+        left: 4.5em;
+        bottom: 8em;
+        transform: translateX(-50%);
+    }
+
+    .英国-伦敦 .transform {
+        left: -5em;
+        bottom: -0.5em;
+    }
+
+    .英国-伦敦 .transform:after {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(45px, -30px) rotate(-45deg);
+    }
+
+    .英国-伦敦 .point_2018 p {
+        left: -5em;
+        bottom: -2.5em;
+        transform: translateX(-50%);
+    }
+
+    .荷兰-海牙 .point_2018 p {
+        left: 0.5em;
+        bottom: 7em;
+        transform: translateX(-50%);
+    }
+
+    .加拿大-多伦多 .transform {
+        transform: rotate(180deg);
+    }
+
+    .加拿大-多伦多 .point_2018 .map-marker-info {
+        left: -2em;
+        bottom: -7em;
+    }
+
+    .加拿大-多伦多 .point_2018 .map-marker-info img {
+        transform: rotate(180deg);
+    }
+
+    .加拿大-多伦多 .point_2018 .map-marker-info:after {
+        border-top: 1em solid #006e90;
+    }
+
+    .加拿大-多伦多 .point_2018 p {
+        left: -4em;
+        bottom: -11em;
+        transform: translateX(0%);
+    }
+
+    .美国-波士顿 .point_2018 p {
+        left: -3.5em;
+        bottom: 7em;
+        transform: translateX(0%);
+    }
+
+    .美国-波士顿 .point_2018 .map-marker-info:after {
+        border-top: 1em solid #006e90;
+    }
+
+    .美国-西雅图 .point_2018 .map-marker-info {
+        left: -5.9em;
+        bottom: -2.4em;
+    }
+
+    .美国-西雅图 .transform:after {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(50px, -40px) rotate(-80deg);
+    }
+
+    .美国-西雅图 .point_2018 p {
+        left: -3.5em;
+        bottom: -4.5em;
+        transform: translateX(0%);
+    }
+
+    .美国-圣何塞 .transform {
+        left: -6.5em;
+        bottom: -3.8em;
+    }
+
+    .美国-圣何塞 .transform:after {
+        content: '';
+        width: 2px;
+        height: 40px;
+        border-left: 2px dashed white;
+        border-right: 0;
+        border-top: 0;
+        border-bottom: 0;
+        left: 50%;
+        position: absolute;
+        bottom: 100%;
+        transform: translate(52px, -50px) rotate(-90deg);
+    }
+
+    .美国-圣何塞 .point_2018 p {
+        left: 0.5em;
+        bottom: 0.5em;
+        transform: translateX(-50%);
+    }
+</style>
+<div class="map" id="app">
+    <!--<ul class="nav nav-tabs justify-content-center" id="years">-->
+    <!--</ul>-->
+    <div style="text-align: center;margin: 0em;">
+        <template v-for="item in years">
+            <Button-Group style="margin: 3em 1em;">
+                <i-button shape="circle"
+                          @click="exchange(item.value)"
+                          :class="{is_active:item.active}">
+                    <div class="year">
+                        <button class="dot"
+                                :class="'dot_'+item.value"
+                                disabled
+                                v-if="item.value !== 'all'">
+                        </button>
+                        <span class="year-value">{{item.name}}</span>
+                    </div>
+                </i-button>
+            </Button-Group>
+        </template>
+    </div>
+    <div class="world-map">
+        <img src="./17330d_735fff04ac824c09a120015b8df49917_mv2.png">
+        <!--<img src="http://res.cloudinary.com/slzr/image/upload/v1500321012/world-map-1500_vvekl5.png">-->
+        <ul class="map-markers" id="cooperation">
+            <template v-for="(value, key) in data">
+                <li class="map-marker"
+                    :class="value.name"
+                    :style="{top: value.top+'%', left: value.left+'%'}"
+                    v-if="isShow(value.cooperators)">
+                    <div class="point animation"
+                         :class="pointClass(value)"
+                         :style="animationPulseStyle(value)">
+                        <div class="map-marker-info"
+                             :class="{transform:transformClass(value)}"
+                             :style="markerStyle(value.cooperators)">
+                            <div class="map-marker-info-inner animate-bounce-in"
+                                 :style="animationBounceStyle(value)">
+                                <template v-for="item in selected(value.cooperators)">
+                                    <img :src="item.logo">
+                                </template>
+                            </div>
+                        </div>
+                        <p class="location"
+                           :style="pStyle(value)">{{value.name}}</p>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </div>
+</div>
+<script src="data.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            switchValue: true,
+            years: [
+                {
+                    'value': 'all',
+                    'active': true,
+                    'name': '全部年份'
+                }, {
+                    'value': '2015',
+                    'active': false,
+                    'name': '2015'
+                }, {
+                    'value': '2016',
+                    'active': false,
+                    'name': '2016'
+                }, {
+                    'value': '2017',
+                    'active': false,
+                    'name': '2017'
+                }, {
+                    'value': '2018',
+                    'active': false,
+                    'name': '2018'
+                }
+            ],
+            yearActive: 'all',
+            data: {}
+        },
+        computed: {},
+        methods: {
+            init: function (data) {
+                var map = {};
+                for (var i = 0; i < data.length; i++) {
+                    var co = data[i]
+                    if (!map[co.location]) {
+                        var location = {}
+                        location.top = co.top
+                        location.left = co.left
+                        location.name = co.location
+                        location.year = co.year
+                        location.transform = co.transform
+                        location.cooperators = []
+                        map[co.location] = location
+                    }
+                    map[co.location].cooperators.push(co)
+                }
+                this.data = map
+            },
+            exchange: function (value) {
+                for (var i = 0; i < this.years.length; i++) {
+                    this.yearActive = value
+                    var item = this.years[i]
+                    if (item.value === value) {
+                        item.active = true
+                    } else {
+                        item.active = false
+                    }
+                }
+            },
+            markerStyle: function (list) {
+                return {
+                    'width': this.markerWidth(list),
+                    'display': this.yearActive === 'all'?'none':'block'
+                }
+            },
+            pStyle: function (value) {
+                var pointWidth = 1
+                var len = value.name.length
+                var res = {}
+                res['min-width'] = (len + 2) + 'em'
+                if (!this.transformClass(value)) {
+                    res['transform'] = 'translateX(' + (-(len + 2 - pointWidth)) / 2 + 'em)'
+                }
+                res['display'] = this.yearActive === 'all'?'none':'block'
+                return res
+            },
+            transformClass: function (value) {
+                var cos = value.cooperators
+                var self = this
+                var flag = false
+                cos = cos.filter(function (value1) {
+                    return self.yearActive === value1.year
+                })
+                for (var i = 0; i < cos.length; i++) {
+                    if (cos[i].transform) {
+                        flag = true
+                    }
+                }
+                return flag
+            },
+            markerWidth: function (list) {
+                var arr = this.filtered(list)
+                var len = arr.length
+                var wid = 0
+                switch (len) {
+                    case 1:
+                    case 2:
+                    case 3:
+                        wid = len
+                        break
+                    case 4:
+                        wid = 2
+                        break
+                    case 5:
+                    case 6:
+                        wid = 3
+                        break
+                    case 7:
+                    case 8:
+                    case 9:
+                    case 10:
+                    case 11:
+                    case 12:
+                    case 13:
+                    case 14:
+                        wid = 4
+                        break
+                    default:
+                        wid = 5
+                        break
+                }
+                return wid * 5 + 'em'
+            },
+            animationPulseStyle:function (item) {
+                return {
+                    'animation-name': 'pulse-'+this.yearActive,
+                }
+            },
+            animationBounceStyle:function () {
+                return {
+                    'animation-name': 'bounce-in-'+this.yearActive,
+                }
+            },
+            pointClass: function (item) {
+                var point = ''
+                if (this.yearActive === 'all') {
+                    point = 'point_' + item.year
+                } else {
+                    point = 'point_' + this.yearActive
+                }
+                return point
+            },
+            isShow: function (list) {
+                var arr = this.filtered(list)
+                return arr.length > 0 ? true : false
+            },
+            selected: function (list) {
+                var self = this
+                var res = list.filter(function (value) {
+                    if (self.yearActive === 'all') {
+                        return true
+                    }
+                    return value.year === self.yearActive
+                })
+                res = this.distinct(res)
+                return res
+            },
+            distinct: function (list) {
+                var res = []
+                var logo = []
+                for (var i = 0; i < list.length; i++) {
+                    var item = list[i]
+                    if (logo.indexOf(item.logo) === -1) {
+                        logo.push(item.logo)
+                        res.push(item)
+                    }
+                }
+                return res
+            },
+            filtered: function (list) {
+                var self = this
+                var result = list.filter(function (value) {
+                    if (self.yearActive === 'all') {
+                        return true
+                    }
+                    return value.year === self.yearActive
+                })
+                return result
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                var self = this
+                this.init(cooperators)
+                // self.yearActive = '2015'
+                // var index = 1
+                var index = 0
+                setInterval(
+                    function (args) {
+                        var years = ['2015', '2016', '2017', '2018']
+                        var text = $('button.is_active .year-value').html()
+                        if (text === '全部年份') {
+                            self.yearActive = years[index]
+                            index += 1
+                            index = index % 4
+                        }
+                    }, 3000);
+            })
+        }
+    })
+</script>
+</body>
+</html>
