@@ -1,3 +1,24 @@
+/*
+里面所有的符号格式必须是英文格式的
+数据格式说明：
+[]:表示列表，是所有元素的集合
+{}:表示字典，里面就是每个元素的所有信息，{}如果在中间位置，后面需要加英文逗号: ,
+网络路径：网址，
+本地路径：保存在和文件同一台电脑设备的路径，
+如：./images/brisbane Cropped.jpeg"，./：文件的相同目录，images：一个叫images的文件夹，brisbane Cropped.jpeg：图片名称
+其他：../：表示文件的上一级目录
+{
+    "title": "标题",
+    "content": "内容（已弃用）",
+    "year": "年份",
+    "location": "位置",
+    "logo": "图片路径",
+    'transform': 图片是否需要偏斜，需配合 css使用,
+    "top": "相对于页面(这里指的是子页面的)从上看的百分比位置",
+    "left": "相对于页面(这里指的是子页面的)从左看的百分比位置"
+}
+ */
+
 var cooperators = [{
     "title": "柬埔寨民间社会组织联盟论坛",
     "content": "Civil   Society Alliance Forum",

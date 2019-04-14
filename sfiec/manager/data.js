@@ -1,3 +1,61 @@
+/*
+里面所有的符号格式必须是英文格式的
+数据格式说明：
+[]:表示列表，是所有元素的集合
+{}:表示字典，里面就是每个元素的所有信息，{}如果在中间位置，后面需要加英文逗号: ,
+网络路径：网址，
+本地路径：保存在和文件同一台电脑设备的路径，
+如：./images/brisbane Cropped.jpeg"，./：文件的相同目录，images：一个叫images的文件夹，brisbane Cropped.jpeg：图片名称
+其他：../：表示文件的上一级目录
+如果需要删除数据，可以参照“邱越华”、“方惠莹”的处理，也可以彻底删除
+
+荣誉成员数据：
+{
+    "order": "同一个level级别的显示排序",
+    "src": "图片路径",
+    "name": "姓名",
+    "desc": "描述，<br>可以用于分行",
+    "desc_span": "弃用",
+    "col": "弃用",
+    "category": "分类",
+    "level": "二级分类",
+    "level_span": "弃用",
+    "level_desc": "分类描述"
+},
+秘书处数据：
+{
+    "order": "10",
+    "src": "图片一路径",
+    "src2": "图片二路径",
+    "name": "姓名",
+    "desc": "描述（已弃用）",
+    "col": "合并列数（已弃用）",
+    "category": "分类",
+    "linkedin": "领英连接",
+    "level_desc": "级别/职位描述"
+}
+ */
+
+var category= [
+    {
+        'code': 'organization',
+        'active': true,
+        'name': '荣誉成员'
+    }, {
+        'code': 'council',
+        'active': false,
+        'name': '理事会'
+    }, {
+        'code': 'supervisors',
+        'active': false,
+        'name': '监事'
+    }, {
+        'code': 'secretariat',
+        'active': false,
+        'name': '秘书处'
+    },
+]
+
 var data = [{
     "order": "18",
     "src": "./images/council/pengzhibing.jpg",
