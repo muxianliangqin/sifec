@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/iview/dist/iview.min.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <script src="data.js"></script>
+    <style>
+        body {
+            background-color: #f7f6f7;
+            font-size: 14px;
+            font-family: "Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        }
+
+        #container{
+            width: 80%;
+            margin: 0 auto;
+        }
+
+        ::-webkit-scrollbar { /*隐藏滚轮*/
+            display: none;
+        }
+
+        .xihei {
+            font-family: STXihei, "华文细黑";
+        }
+
+        .level_desc {
+            display: none;
+        }
+
+        /*#organization .ivu-col:hover .level_desc {*/
+        /*display: block;*/
+        /*}*/
+        /*#organization .ivu-col:hover .img-desc {*/
+        /*bottom: 0%;*/
+        /*transform: translateY(0%);*/
+        /*}*/
+        #organization .ivu-col:not(.classify):hover {
+            box-shadow: 5px 5px 2px #888888;
+        }
+
+        .is_active {
+            background-color: #61d0d4d6;
+        }
+
+        .name_desc {
+            position: relative;
+            background-color: white;
+            text-align: center;
+        }
+
+        .caption {
+            width: 100%;
+            height: 6em;
+            position: relative;
+        }
+
+        .img-desc {
+            position: absolute;
+            left: 0;
+            bottom: 50%;
+            width: 100%;
+            transform: translateY(50%);
+            background-color: white;
+        }
+
+        .level_desc {
+            background-color: #66a7e7;
+            padding: 0.5em 0;
+        }
+
+        .table {
+            width: 100%;
+            max-width: 100%;
+            margin: 1rem 0em;
+            background-color: transparent;
+            text-align: center;
+            border-collapse: collapse;
+        }
+
+        .table-bordered {
+            border: 1px solid #dee2e6;
+        }
+
+        .shadow {
+            /*opacity:0.05*/
+            box-shadow: 5px 5px 2px #888888;
+        }
+
+        #secretariat .shadow{
+            box-shadow: 0px 5px 10px #000000;
+        }
+
+
+        table .level-desc {
+            margin: 0px auto;
+            color: #515a6e;
+            font-weight: bolder;
+        }
+
+        table .name {
+            margin-left: 1rem;
+            margin-right: 1rem;
+        }
+
+        table .desc {
+            text-align: left;
+            margin-right: 1rem;
+        }
+
+        table td, th {
+            border: none;
+            padding: 0.25rem;
+            position: relative;
+        }
+
+        table .stripe {
+            background-color: #ededed;
+        }
+
+        table .td-bd {
+            border-right: 4px solid #8bdde8;
+        }
+
+        table .td-bd > div{
+            background-color: #8bdde8;
+            width: 6em;
+            height: 6em;
+        }
+
+        table .vice_chairman {
+            border-right: 4px solid #6a8425;
+        }
+
+        table .vice_chairman > div {
+            background-color: #6a8425;
+            width: 6em;
+            height: 6em;
+        }
+
+        table .title {
+            position: absolute;
+            left: 50%;
+            width: 100%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        table div.size {
+            width: 6em;
+            height: 6em;
+        }
+
+        table .council_member {
+            border-right: 4px solid #a6ce39;
+        }
+
+        table .council_member > div {
+            background-color: #a6ce39;
+        }
+
+        table .member {
+            border-right: 4px solid #bedb6f;
+        }
+
+        table .member > div {
+            background-color: #bedb6f;
+        }
+
+        table .chairman_unit {
+            border-right: 4px solid #0095a9;
+        }
+
+        table .chairman_unit > div {
+            background-color: #0095a9;
+        }
+
+        table .vice_chairman_unit {
+            border-right: 4px solid #00b6ce;
+        }
+
+        table .vice_chairman_unit > div {
+            background-color: #00b6ce;
+        }
+
+        table .council_member_unit {
+            border-right: 4px solid #45c9db;
+        }
+
+        table .council_member_unit > div {
+            background-color: #45c9db;
+        }
+
+        table .member_unit {
+            border-right: 4px solid #8bdde8;
+        }
+
+        table .member_unit > div {
+            background-color: #8bdde8;
+        }
+
+        #vice_chairman td.name {
+            font-weight: bolder;
+            color: black;
+        }
+
+        #council_member td.name {
+            font-weight: bolder;
+            color: black;
+        }
+
+        #member td.name {
+            font-weight: bolder;
+            color: black;
+        }
+
+        #council .pd {
+            padding: 10px;
+        }
+
+        #council .bg {
+            background-color: white;
+            color: black;
+        }
+
+        #council .header {
+            position: relative;
+        }
+
+        .bar {
+            height: 8px;
+            width: 3em;
+            background-color: #8bdde8;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, 1.5em);
+        }
+
+        .classify {
+            position: relative;
+            text-align: center;
+            padding: 2em;
+        }
+
+        #secretariat img {
+            width: 100%;
+            float: left;
+            margin-bottom: 0.5em;
+        }
+
+        #secretariat .src {
+            display: block;
+        }
+
+        #secretariat .src2 {
+            display: none;
+        }
+
+        #secretariat .ivu-card:hover .src {
+            display: none;
+        }
+
+        #secretariat .ivu-card:hover .src2 {
+            display: block;
+        }
+
+        #secretariat .ivu-card:hover {
+            box-shadow: 0px 5px 10px #000000;
+        }
+
+        #secretariat .ivu-card {
+            height: 100%;
+            text-align: center;
+            position: relative;
+        }
+
+        #secretariat .linkedin {
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            font-size: 24px;
+            position: absolute;
+            right: .5em;
+            top: .5em;
+            /*z-index: 100;*/
+            color: white;
+            border-radius: 4px;
+            background-color: white;
+        }
+        .ivu-btn:hover{
+            border-color: #8bdde8;
+            color: #8bdde8;
+        }
+        .fixed {
+            margin-top: 3em;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <Affix :offset-top="0" @on-change="change">
+        <div style="text-align: center;padding-top: 3em;z-index: 999;background-color: #f7f6f7;">
+            <template v-for="item in category">
+                <Button-Group style="margin: 1em">
+                    <i-button shape="circle"
+                              style="font-size: 16px;font-weight: bolder"
+                              @click="exchange(item.code)"
+                              :class="{is_active:item.active}">{{item.name}}
+                    </i-button>
+                </Button-Group>
+            </template>
+        </div>
+        <a href="#container"></a>
+    </Affix>
+    <div id="container" :class="{fixed:isFixed}">
+        <div id="organization" style="display: block">
+            <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
+                <i-col span="4" class="classify" style="margin-bottom: 2em">
+                    <p style="font-size: 16px;font-weight: bolder">荣誉会长</p>
+                    <div class="bar" style="width: 5em"></div>
+                </i-col>
+            </Row>
+            <div id="chairman" style="width:80%;margin:auto;margin-bottom: 4em">
+                <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
+                    <i-col span="4"
+                           style="padding: 0"
+                           class="shadow"
+                           v-for="item in organization.chairman">
+                        <div class="name_desc">
+                            <img :src="item.src" style="width: 100%;">
+                            <div class="caption">
+                                <div class="img-desc">
+                                    <h3 width="100%">{{item.name}}</h3>
+                                    <p width="100%" class="xihei" v-html="item.desc" class="desc"></p>
+                                    <h4 width="100%" class="level_desc ">{{item.level_desc}}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </i-col>
+                </Row>
+            </div>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="vice_chairman">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="10%">
+                    <col width="29%">
+                    <col width="1%">
+                    <col width="10%">
+                    <col width="25%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.vice_chairman">
+                    <td v-if="index===0" :rowspan="organization.vice_chairman.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td class="desc xihei" :class="{stripe :index%2===1}">{{item[1].desc}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td class="desc xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].desc}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="council_member">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="10%">
+                    <col width="29%">
+                    <col width="1%">
+                    <col width="10%">
+                    <col width="25%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.council_member">
+                    <td v-if="index===0" :rowspan="organization.council_member.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td class="desc xihei" :class="{stripe :index%2===1}">{{item[1].desc}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td class="desc xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].desc}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="member">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="10%">
+                    <col width="29%">
+                    <col width="1%">
+                    <col width="10%">
+                    <col width="25%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.member">
+                    <td v-if="index===0" :rowspan="organization.member.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td class="desc xihei" :class="{stripe :index%2===1}">{{item[1].desc}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td class="desc xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].desc}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="chairman_unit">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="39%">
+                    <col width="1%">
+                    <col width="35%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.chairman_unit">
+                    <td v-if="index===0" :rowspan="organization.chairman_unit.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="vice_chairman_unit">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="39%">
+                    <col width="1%">
+                    <col width="35%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.vice_chairman_unit">
+                    <td v-if="index===0" :rowspan="organization.vice_chairman_unit.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="council_member_unit">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="39%">
+                    <col width="1%">
+                    <col width="35%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in organization.council_member_unit">
+                    <td v-if="index===0" :rowspan="organization.council_member_unit.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td></td>
+                    <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td></td>
+                </tr>
+            </table>
+            <table class="table " style="width:80%;margin: 2em auto;transform: translateX(2%)" id="member_unit">
+                <colgroup>
+                    <col width="17%">
+                    <col width="3%">
+                    <col width="39%">
+                    <col width="1%">
+                    <col width="35%">
+                    <col width="5%">
+                </colgroup>
+                <tbody>
+                <template v-for="(item,index) in organization.member_unit">
+                    <tr>
+                        <td v-if="index===0" :rowspan="organization.member_unit.length+1" class="td-bd">
+                            <div class="level-desc shadow size">
+                                <p v-html="item[1].level_desc" class="title"></p>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td class="name xihei" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                        <td></td>
+                        <td class="name xihei" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                        <td></td>
+                    </tr>
+                    <tr v-if="index===0 && organization.member_unit.length === 2">
+                        <td style="height: 2em"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </template>
+            </table>
+        </div>
+        <div id="council" style="display: none">
+            <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg"
+                 style="padding-top: 2em;margin-bottom: 2em">
+                <i-col span="8"
+                       class="shadow"
+                       style="padding: 0;"
+                       v-for="item in council.president">
+                    <div class="name_desc">
+                        <Layout>
+                            <Sider hide-trigger class="bg pd">
+                                <img :src="item.src" style="width: 100%">
+                            </Sider>
+                            <Layout>
+                                <i-Header class="bg header">
+                                    <h2>{{item.name}}</h2>
+                                    <div class="bar"></div>
+                                </i-Header>
+                                <i-Content class="bg">
+                                    <h4>{{item.level_desc}}</h4>
+                                </i-Content>
+                                <i-Footer class="bg" style="height: 45%;padding: 0">
+                                    <p v-html="item.desc"></p>
+                                </i-Footer>
+                            </Layout>
+                        </Layout>
+                    </div>
+                </i-col>
+            </Row>
+            <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
+                <i-col span="4" class="classify">
+                    <p style="font-size: 16px;font-weight: bolder">副理事长</p>
+                    <div class="bar" style="width: 5em"></div>
+                </i-col>
+            </Row>
+            <Row :gutter="16" type="flex"
+                 justify="center"
+                 class="code-row-bg"
+                 style="margin: 2em 0"
+                 v-for="item in council.vice">
+                <i-col span="6"
+                       class="shadow"
+                       style="padding: 0;margin: 0 1.5em;"
+                       v-for="i of item">
+                    <div class="name_desc">
+                        <Layout>
+                            <Sider hide-trigger style="width: 150px;min-width: 150px;max-width: 150px;flex: 0 0 150px;">
+                                <img :src="i.src" style="width: 100%;float: left">
+                            </Sider>
+                            <Layout>
+                                <i-Header style="background-color: white">
+                                    <b>{{i.name}}</b>
+                                </i-Header>
+                                <i-Content style="background-color: white;">
+                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                </i-Content>
+                            </Layout>
+                        </Layout>
+                    </div>
+                </i-col>
+            </Row>
+            <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
+                <i-col span="4" class="classify">
+                    <p style="font-size: 16px;font-weight: bolder">理事</p>
+                    <div class="bar" style="width: 3em"></div>
+                </i-col>
+            </Row>
+            <Row :gutter="16" type="flex"
+                 justify="center"
+                 class="code-row-bg"
+                 style="margin: 2em 0"
+                 v-for="item in council.member">
+                <i-col span="6"
+                       class="shadow"
+                       style="padding: 0;margin: 0 1.5em;"
+                       v-for="i of item">
+                    <div class="name_desc">
+                        <Layout>
+                            <Sider hide-trigger style="width: 150px;min-width: 150px;max-width: 150px;flex: 0 0 150px;">
+                                <img :src="i.src" style="width: 100%;float: left">
+                            </Sider>
+                            <Layout>
+                                <i-Header style="background-color: white">
+                                    <b>{{i.name}}</b>
+                                </i-Header>
+                                <i-Content style="background-color: white;font-size: 13px">
+                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                </i-Content>
+                            </Layout>
+                        </Layout>
+                    </div>
+                </i-col>
+            </Row>
+        </div>
+        <div id="supervisors" style="display: none">
+            <table class="table" style="width:80%;margin: 2em auto;transform: translateX(2%)" id="supervisor">
+                <colgroup>
+                    <col width="19%">
+                    <col width="1%">
+                    <col width="10%">
+                    <col width="29%">
+                    <col width="1%">
+                    <col width="10%">
+                    <col width="30%">
+                </colgroup>
+                <tbody>
+                <tr v-for="(item,index) in supervisor">
+                    <td v-if="index===0" :rowspan="supervisor.length" class="td-bd">
+                        <div class="level-desc shadow size">
+                            <p v-html="item[1].level_desc" class="title"></p>
+                        </div>
+                    </td>
+                    <td></td>
+                    <td class="name" :class="{stripe :index%2===1}">{{item[1].name}}</td>
+                    <td class="desc" :class="{stripe :index%2===1}">{{item[1].desc}}</td>
+                    <td></td>
+                    <td class="name" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].name}}</td>
+                    <td class="desc" v-if="item[0]" :class="{stripe :index%2===1}">{{item[2].desc}}</td>
+                </tr>
+            </table>
+        </div>
+        <div id="secretariat" style="display: none;">
+            <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
+                <i-col span="4" class="classify">
+                    <p style="font-size: 16px;font-weight: bolder">秘书处</p>
+                    <div class="bar" style="width: 4em"></div>
+                </i-col>
+            </Row>
+            <Row :gutter="32"
+                 style="margin: 2em 20%;"
+                 v-for="item in secretariat">
+                <i-col span="8"
+                       v-for="i of item">
+                    <div class="ivu-card shadow">
+                        <img :src="i.src" class="src">
+                        <img :src="i.src2" class="src2">
+                        <h3>{{i.name}}</h3>
+                        <p class="xihei" style="margin: 0.5em;">{{i.level_desc}}</p>
+                        <a class="linkedin" v-if=" ''!== i.linkedin" :href="i.linkedin" target="_blank">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                             xmlns:xlink="http://www.w3.org/1999/xlink"
+                             version="1.1" id="Layer_1"
+                             x="0px" y="0px"
+                             viewBox="0 0 382 382"
+                             style="enable-background:new 0 0 382 382;"
+                             width="24" height="24"
+                             xml:space="preserve">
+                            <path style="fill:#0077B7;" d="M347.445,0H34.555C15.471,0,0,15.471,0,34.555v312.889C0,366.529,15.471,382,34.555,382h312.889  C366.529,382,382,366.529,382,347.444V34.555C382,15.471,366.529,0,347.445,0z M118.207,329.844c0,5.554-4.502,10.056-10.056,10.056  H65.345c-5.554,0-10.056-4.502-10.056-10.056V150.403c0-5.554,4.502-10.056,10.056-10.056h42.806  c5.554,0,10.056,4.502,10.056,10.056V329.844z M86.748,123.432c-22.459,0-40.666-18.207-40.666-40.666S64.289,42.1,86.748,42.1  s40.666,18.207,40.666,40.666S109.208,123.432,86.748,123.432z M341.91,330.654c0,5.106-4.14,9.246-9.246,9.246H286.73  c-5.106,0-9.246-4.14-9.246-9.246v-84.168c0-12.556,3.683-55.021-32.813-55.021c-28.309,0-34.051,29.066-35.204,42.11v97.079  c0,5.106-4.139,9.246-9.246,9.246h-44.426c-5.106,0-9.246-4.14-9.246-9.246V149.593c0-5.106,4.14-9.246,9.246-9.246h44.426  c5.106,0,9.246,4.14,9.246,9.246v15.655c10.497-15.753,26.097-27.912,59.312-27.912c73.552,0,73.131,68.716,73.131,106.472  L341.91,330.654L341.91,330.654z"/>
+                        </svg>
+                        </a>
+                    </div>
+                </i-col>
+            </Row>
+        </div>
+    </div>
+</div>
+</body>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            modelShow: 'organization',
+            isFixed: false,
+            category: category,
+            organization: {
+                chairman: [],
+                vice_chairman: [],
+                council_member: [],
+                member: [],
+                chairman_unit: [],
+                vice_chairman_unit: [],
+                council_member_unit: [],
+                member_unit: []
+            },
+            council: {
+                president: [],
+                vice: [],
+                member: []
+            },
+            supervisor: [],
+            secretariat: []
+        },
+        methods: {
+            init: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    var info = data[i]
+                    switch (info.category) {
+                        case 'organization':
+                            this.orgClassify(info)
+                            break
+                        case 'council':
+                            this.councilClassify(info)
+                            break
+                        case 'supervisors':
+                            this.supervisor.push(info)
+                            break
+                        case 'secretariat':
+                            this.secretariat.push(info)
+                            break
+                        default:
+                            break
+                    }
+                }
+                this.organization.chairman.sort(this.sortBy)
+                this.organization.vice_chairman = this.formatList(this.organization.vice_chairman, 2, true)
+                this.organization.council_member = this.formatList(this.organization.council_member, 2, true)
+                this.organization.member = this.formatList(this.organization.member, 2, true)
+                this.organization.chairman_unit = this.formatList(this.organization.chairman_unit, 2, true)
+                this.organization.vice_chairman_unit = this.formatList(this.organization.vice_chairman_unit, 2, true)
+                this.organization.council_member_unit = this.formatList(this.organization.council_member_unit, 2, true)
+                this.organization.member_unit = this.formatList(this.organization.member_unit, 2, true)
+                this.council.vice = this.formatList(this.council.vice, 3, false)
+                this.council.member = this.formatList(this.council.member, 3, false)
+                this.supervisor = this.formatList(this.supervisor, 2, true)
+                this.secretariat = this.formatList(this.secretariat, 3, false)
+            },
+            sortBy: function (a, b) {
+                var orderA = a.order == undefined ? 999 : a.order
+                var orderB = b.order == undefined ? 999 : b.order
+                return parseInt(orderA) - parseInt(orderB)
+            },
+            //input:array
+            formatList: function (input, num, prefix) {
+                input.sort(this.sortBy)
+                input = this.fold(input, num, prefix)
+                return input
+            },
+            orgClassify: function (info) {
+                switch (info.level) {
+                    case 'chairman':
+                        this.organization.chairman.push(info)
+                        break
+                    case 'vice_chairman':
+                        this.organization.vice_chairman.push(info)
+                        break
+                    case 'council_member':
+                        this.organization.council_member.push(info)
+                        break
+                    case 'member':
+                        this.organization.member.push(info)
+                        break
+                    case 'chairman_unit':
+                        this.organization.chairman_unit.push(info)
+                        break
+                    case 'vice_chairman_unit':
+                        this.organization.vice_chairman_unit.push(info)
+                        break
+                    case 'council_member_unit':
+                        this.organization.council_member_unit.push(info)
+                        break
+                    case 'member_unit':
+                        this.organization.member_unit.push(info)
+                        break
+                    default:
+                        break
+                }
+            },
+            councilClassify: function (info) {
+                switch (info.level) {
+                    case 'president':
+                        this.council.president.push(info)
+                        break
+                    case 'vice':
+                        this.council.vice.push(info)
+                        break
+                    case 'member':
+                        this.council.member.push(info)
+                        break
+                    default:
+                        break
+                }
+            },
+            fold: function (input, num, prefix) {
+                var list = []
+                for (var i = 0; i < input.length; i++) {
+                    var sub_list = []
+                    if (i % num == 0) {
+                        if (i >= input.length - num + 1) {
+                            if (prefix) {
+                                sub_list.push(false)
+                            }
+                            for (var j = i; j < input.length; j++) {
+                                sub_list.push(input[j])
+                            }
+                        } else {
+                            if (prefix) {
+                                sub_list.push(true)
+                            }
+                            for (var j = i; j < i + num; j++) {
+                                sub_list.push(input[j])
+                            }
+                        }
+                        list.push(sub_list)
+                    } else {
+                        continue
+                    }
+                }
+                return list
+            },
+            exchange: function (code) {
+                $('#organization').hide(500)
+                $('#council').hide(500)
+                $('#supervisors').hide(500)
+                $('#secretariat').hide(500)
+                $('#' + code).show(500)
+                for (var i = 0; i < this.category.length; i++) {
+                    var item = this.category[i]
+                    if (item.code === code) {
+                        item.active = true
+                    } else {
+                        item.active = false
+                    }
+                }
+
+                //将页面滚动到对应的位置
+                $('html,body').scrollTop(0);
+            },
+            change (status) {
+                console.log(status)
+                if (status) {
+                    this.isFixed = true
+                }
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                this.init(data)
+            })
+        }
+    })
+</script>
+</html>

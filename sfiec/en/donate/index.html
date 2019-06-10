@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Title</title>
+    <script src="https://cdn.staticfile.org/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/iview/dist/styles/iview.css">
+    <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+    <script type="text/javascript" src="https://unpkg.com/iview/dist/iview.min.js"></script>
+    <style>
+        body{
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            background-color: #fafafa;
+            font-size: 16px;
+        }
+        div{
+            margin: auto;
+        }
+        #app{
+            margin: 10px auto;
+            /*text-align: left;*/
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div style="text-align: center">
+        <span>请选择年份：</span>
+        <i-select v-model="model1"
+                  ref="years"
+                  @on-change="yearSelected"
+                  size="large"
+                  style="width:10rem;margin: 1rem 0;">
+            <i-option v-for="year in years"
+                      :value="year"
+                      :key="year"
+                      size="large">
+                {{year === 'all' ?'全部':year+'年'}}
+            </i-option>
+        </i-select>
+        <span style="margin-left: 2em">请选择金额：</span>
+        <i-select v-model="model2"
+                  ref="amount"
+                  @on-change="amountSelected"
+                  size="large"
+                  style="width:10rem;margin: 1rem 0;">
+            <i-option v-for="item in amount"
+                      :value="item.value"
+                      :key="item.value"
+                      size="large">
+                {{item.label}}
+            </i-option>
+        </i-select>
+    </div>
+    <div>
+        <i-table :border="true"
+                 :columns="columns"
+                 :data="data"
+                 :show-header="true"
+                 :stripe="false"
+                 :highlight-row="true"
+                 size="large"
+                 :width="1000">
+        </i-table>
+    </div>
+    <div>
+        <Page :total='total' @on-change="pageChange" style="margin: 1rem 1rem;font-size: 16px"/>
+    </div>
+</div>
+<script src="data.js"></script>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            years: [],
+            amount: [
+                {
+                    'value':'all',
+                    'label':'全部'
+                },{
+                    'value':'1',
+                    'label':'0-50万'
+                },{
+                    'value':'2',
+                    'label':'50-100万'
+                },{
+                    'value':'3',
+                    'label':'100-500万'
+                },{
+                    'value':'4',
+                    'label':'>500万'
+                }
+            ],
+            data:[],
+            data_show:[],
+            year_current:'all',
+            amount_current:'all',
+            total: 0,
+            model1:'all',
+            model2:'all',
+            yearFilter: false,
+            amountFilter: false,
+            columns: [
+                {
+                    type: 'index',
+                    title: '序号',
+                    align: 'center'
+                },{
+                    key: 'name',
+                    title: '捐赠协议名称',
+                    align: 'center',
+                    minWidth: 100
+                },{
+                    key: 'amount',
+                    title: '捐赠金额（原币）',
+                    align: 'center'
+                },{
+                    key: 'currency',
+                    title: '捐赠币别',
+                    align: 'center',
+                },{
+                    key: 'amount_cny',
+                    title: '折合人民币金额',
+                    align: 'center',
+                },{
+                    key: 'date',
+                    title: '到账日期',
+                    align: 'center',
+                }
+            ]
+        },
+        methods: {
+            initData: function () {
+                var data = this.filtered()
+                this.data_show = data
+                this.data = data.slice(0,9)
+                this.total = data.length
+            },
+            initYear: function () {
+                var years = []
+                data_input.forEach(function (value) {
+                    if (value.year!=undefined&&!years.includes(value.year)){
+                        years.push(value.year)
+                    }
+                })
+                this.years = years.sort()
+                this.years.unshift('all')
+            },
+            pageChange: function (page) {
+                this.data = this.data_show.slice((page-1)*10,page*10-1)
+            },
+            yearSelected: function (value) {
+                this.year_current = value
+                this.initData()
+            },
+            amountSelected: function (value) {
+                this.amount_current = value
+                this.initData()
+            },
+            filtered: function () {
+                var self = this
+                var dataCopy = data_input.slice(0)
+                return dataCopy.filter(function (value1) {
+                    var flag = false
+                    var amount_cny = value1.amount_cny.replace(/[,]/gm,'')
+                    switch (self.amount_current) {
+                        case '1':
+                            flag = parseFloat(amount_cny) <= 500000
+                            break
+                        case '2':
+                            flag = parseFloat(amount_cny) <= 1000000
+                                &&parseFloat(amount_cny) >= 500000
+                            break
+                        case '3':
+                            flag = parseFloat(amount_cny) <= 5000000
+                                &&parseFloat(amount_cny) >= 1000000
+                            break
+                        case '4':
+                            flag = parseFloat(amount_cny) >= 5000000
+                            break
+                        case 'all':
+                            flag = true
+                            break
+                        default:
+                            break
+                    }
+                    flag = flag&&(self.year_current==='all'?true:value1.year === self.year_current)
+                    return flag
+                })
+            }
+        },
+        mounted() {
+            this.initData()
+            this.initYear()
+            // console.log(data_input)
+        }
+    })
+</script>
+</body>
+</html>

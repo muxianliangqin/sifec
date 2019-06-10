@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Bootstrap 实例</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="https://vuejs.org/js/vue.min.js"></script>
+    <style>
+        body {
+            background-color: #d4d7e0;
+            font-family: "Microsoft YaHei","微软雅黑",Arial,sans-serif;
+        }
+
+        .card-body {
+            background-color: #d4d7e0;
+        }
+
+        .card {
+            border: 0;
+            margin: .25rem 0;
+            background-color: #9ea3ad
+        }
+
+        .card-header {
+            padding: 0;
+            /*margin: .75rem 1.25rem;*/
+            border: 0;
+            background-color: #cdd2dc;
+        }
+
+        .order {
+            line-height: 3rem;
+            color: #020203;
+            font-size: 2rem;
+            padding: 0.5rem 1rem;
+            float: left;
+            background-color: #bcc2d5;
+        }
+
+        .title {
+            line-height: 3rem;
+            color: #4d4f5e;
+            padding: 0.5rem 0rem 0.5rem 2rem;
+            float: left;
+        }
+
+        .card-body a {
+            color: #000;
+        }
+        a:link{
+            color:black;
+        }
+        /*a:visited {*/
+            /*color:blue;*/
+        /*}*/
+        a:hover {
+            color:#63bcdc;
+        }
+        .container{
+            max-width: none;
+            margin: 2em 0;
+        }
+        a .active{
+            background-color: #63bcdc;
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <div id="accordion">
+        <div class="card" v-for="(item,index) in reports">
+            <div class="card-header" @click="change(item[0].category)">
+                <a class="card-link" data-toggle="collapse" :href="'#'+item[0].category" aria-expanded="true">
+                    <div class="order" :class="{active:index===0}">{{'0'+(index+1)}}</div>
+                    <div class="title"><b>{{item[0].desc}}</b></div>
+                </a>
+            </div>
+            <div :id="item[0].category" class="collapse" :class="{show:index===0} " data-parent="#accordion" style="">
+                <div class="card-body">
+                    <p v-for="i in item">
+                        <a :href="i.link" :download="i.title+'.pdf'" target="_blank" data-type="document">{{i.title}}</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<script src="data.js"></script>
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            reports:[]
+        },
+        methods:{
+            init:function (data) {
+                var annualReport = []
+                var auditReport = []
+                var management = []
+                for (var i=0;i<data.length;i++){
+                    var report = data[i]
+                    switch (report.category) {
+                        case 'annualReport':
+                            annualReport.push(report)
+                            break
+                        case 'auditReport':
+                            auditReport.push(report)
+                            break
+                        case "management":
+                            management.push(report)
+                            break
+                        default:
+                            break
+                    }
+                }
+                annualReport.sort(this.sortBy)
+                auditReport.sort(this.sortBy)
+                management.sort(this.sortBy)
+                this.reports.push(annualReport)
+                this.reports.push(auditReport)
+                this.reports.push(management)
+            },
+            sortBy: function (a, b) {
+                return parseInt(a.order)-parseInt(b.order)
+            },
+            change:function (id) {
+                $('#'+id).toggle(500)
+                $('div[data-parent="#accordion"]:not(#'+id+')').hide(500)
+                $('a.card-link .order').removeClass('active')
+                if ($('#'+id + '.show').length === 0){
+                    $('a[href="#'+id+'"] .order').addClass('active')
+                }
+            }
+        },
+        mounted: function () {
+            this.$nextTick(function () {
+                this.init(data)
+            })
+        }
+    })
+</script>
+</html>
