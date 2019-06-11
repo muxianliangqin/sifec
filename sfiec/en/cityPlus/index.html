@@ -310,17 +310,19 @@
                             <img :src="item.logo">
                         </div>
                         <a :href="item.link"
-                           :style="{width:item.name.length+1+'em'}"
                            :class="item.locate"
                            v-if="item.line === 'online'"
                            target="_blank">
-                            <span style="font-size:14px;font-weight: bold">{{item.name}}</span>
+                            <span style="font-size:14px;font-weight: bold;padding-left: 1em;white-space: nowrap;">
+                                {{item.name}}
+                            </span>
                         </a>
-                        <a :style="{width:item.name.length+1+'em'}"
-                           :class="item.locate"
+                        <a :class="item.locate"
                            v-else
                            disabled>
-                            <span style="font-size:14px;font-weight: bold">{{item.name}}</span>
+                            <span style="font-size:14px;font-weight: bold;padding-left: 1em;;white-space: nowrap;">
+                                {{item.name}}
+                            </span>
                         </a>
                     </div>
                     <div class="map-marker-info animate-bounce-in" v-if="item.img">

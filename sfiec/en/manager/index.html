@@ -62,9 +62,10 @@
         .img-desc {
             position: absolute;
             left: 0;
-            bottom: 50%;
+            /*bottom: 50%;*/
+            height: 100%;
             width: 100%;
-            transform: translateY(50%);
+            /*transform: translateY(50%);*/
             background-color: white;
         }
 
@@ -321,7 +322,7 @@
         <div id="organization" style="display: block">
             <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
                 <i-col span="4" class="classify" style="margin-bottom: 2em">
-                    <p style="font-size: 16px;font-weight: bolder">荣誉会长</p>
+                    <p style="font-size: 16px;font-weight: bolder">Honorary President</p>
                     <div class="bar" style="width: 5em"></div>
                 </i-col>
             </Row>
@@ -336,7 +337,15 @@
                             <div class="caption">
                                 <div class="img-desc">
                                     <h3 width="100%">{{item.name}}</h3>
-                                    <p width="100%" class="xihei" v-html="item.desc" class="desc"></p>
+                                    <div style="height:60px;display: flex;align-items: center;justify-content: center;">
+                                        <Tooltip max-width="200" placement="right" v-if="item.tip">
+                                            <div slot="content" style="width: 170px;text-align: center;position:relative;z-index:99">
+                                                <p width="100%" class="xihei" v-html="item.tip" class="desc"></p>
+                                            </div>
+                                            <p width="100%" class="xihei" v-html="item.desc" class="desc"></p>
+                                        </Tooltip>
+                                        <p width="100%" class="xihei" v-html="item.desc" class="desc" v-else></p>
+                                    </div>
                                     <h4 width="100%" class="level_desc ">{{item.level_desc}}</h4>
                                 </div>
                             </div>
@@ -558,14 +567,14 @@
             </Row>
             <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
                 <i-col span="4" class="classify">
-                    <p style="font-size: 16px;font-weight: bolder">副理事长</p>
+                    <p style="font-size: 16px;font-weight: bolder">Vice Chairman</p>
                     <div class="bar" style="width: 5em"></div>
                 </i-col>
             </Row>
-            <Row :gutter="16" type="flex"
+            <Row :gutter="8" type="flex"
                  justify="center"
                  class="code-row-bg"
-                 style="margin: 2em 0"
+                 style="margin: 1em 0"
                  v-for="item in council.vice">
                 <i-col span="6"
                        class="shadow"
@@ -577,11 +586,17 @@
                                 <img :src="i.src" style="width: 100%;float: left">
                             </Sider>
                             <Layout>
-                                <i-Header style="background-color: white">
-                                    <b>{{i.name}}</b>
+                                <i-Header style="background-color: white;padding: 0">
+                                    <b style="white-space: nowrap">{{i.name}}</b>
                                 </i-Header>
                                 <i-Content style="background-color: white;">
-                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                    <Tooltip max-width="200" placement="right" v-if="i.tip">
+                                        <div slot="content" style="width: 158px;text-align: center">
+                                            <p v-html="i.tip" style="padding: 0.25em;font-size: 13px;"></p>
+                                        </div>
+                                        <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                    </Tooltip>
+                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;" v-else></p>
                                 </i-Content>
                             </Layout>
                         </Layout>
@@ -590,7 +605,7 @@
             </Row>
             <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
                 <i-col span="4" class="classify">
-                    <p style="font-size: 16px;font-weight: bolder">理事</p>
+                    <p style="font-size: 16px;font-weight: bolder">Trustee</p>
                     <div class="bar" style="width: 3em"></div>
                 </i-col>
             </Row>
@@ -609,11 +624,17 @@
                                 <img :src="i.src" style="width: 100%;float: left">
                             </Sider>
                             <Layout>
-                                <i-Header style="background-color: white">
-                                    <b>{{i.name}}</b>
+                                <i-Header style="background-color: white;padding: 0">
+                                    <b style="white-space: nowrap">{{i.name}}</b>
                                 </i-Header>
-                                <i-Content style="background-color: white;font-size: 13px">
-                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                <i-Content style="background-color: white;">
+                                    <Tooltip max-width="200" placement="right" v-if="i.tip">
+                                        <div slot="content" style="width: 158px;text-align: center">
+                                            <p v-html="i.tip" style="padding: 0.25em;font-size: 13px;"></p>
+                                        </div>
+                                        <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;"></p>
+                                    </Tooltip>
+                                    <p v-html="i.desc" style="padding: 0.25em;font-size: 13px;" v-else></p>
                                 </i-Content>
                             </Layout>
                         </Layout>
@@ -651,7 +672,7 @@
         <div id="secretariat" style="display: none;">
             <Row :gutter="32" type="flex" justify="space-around" class="code-row-bg">
                 <i-col span="4" class="classify">
-                    <p style="font-size: 16px;font-weight: bolder">秘书处</p>
+                    <p style="font-size: 16px;font-weight: bolder">Secretariat</p>
                     <div class="bar" style="width: 4em"></div>
                 </i-col>
             </Row>
